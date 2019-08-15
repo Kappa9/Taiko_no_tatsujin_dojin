@@ -40,12 +40,14 @@ public class MusicListManager : MonoBehaviour
 			MusicScore score = new MusicScore();
 			MusicScore.Course course = new MusicScore.Course();
 			string[] str = GameManager.ReadFile(name);
+			score.filePath = name;
 			foreach (string i in str)
 			{
 				if (i.StartsWith("TITLE:")) score.title = i.Substring(6);
 				else if (i.StartsWith("SUBTITLE:")) score.subtitle = i.Substring(9);
 				else if (i.StartsWith("BPM:")) score.bpm = float.Parse(i.Substring(4));
 				else if (i.StartsWith("WAVE:")) score.subtitle = i.Substring(5);
+				else if (i.StartsWith("OFFSET:")) score.offset = float.Parse(i.Substring(7));
 				else if (i.StartsWith("COURSE:")) course.difficulty = int.Parse(i.Substring(7));
 				else if (i.StartsWith("LEVEL:")) course.level = int.Parse(i.Substring(6));
 				else if (i.StartsWith("#END") && course.level > 0)
@@ -62,4 +64,21 @@ public class MusicListManager : MonoBehaviour
 		}
 	}
 
+	void LoadMusic(MusicScore score, int difficulty)
+	{
+		string[] str = GameManager.ReadFile(score.filePath);
+		
+		bool inCourse = false;
+		foreach (string i in str)
+		{
+			if (i.Contains("COURSE:" + difficulty.ToString())) inCourse = true;
+			if (inCourse)
+			{
+				score.courses.Find(s => s.difficulty == difficulty).course.Add(i);
+				if (i.Contains("#END")) break;
+			}
+		}
+		GameManager.currentSong = score;
+		gameManager.StartCoroutine("ChangeSound", score.wave);
+	}
 }
