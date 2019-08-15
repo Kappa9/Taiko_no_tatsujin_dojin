@@ -8,18 +8,47 @@ public class MusicListManager : MonoBehaviour
 	GameManager gameManager;
 	List<string> fileList;
 	List<MusicScore> musicList;
-
+    public List<GameObject> Selection;
+    public GameObject SlcPre;
+    public GameObject parent;
+    private int select=0;
+    private bool slcMsc;
+    private bool slcDft;
     void OnEnable()
     {
 		if (FindObjectOfType<GameManager>() != null) gameManager = FindObjectOfType<GameManager>();
 		fileList = GameManager.GetMusicList();
 		GetAllMusicInfo();
 		ShowMusicList();
-	}
+        
+
+    }
 
     void Update()
     {
-        
+        if (slcMsc==false&&Input.GetButtonDown("DonL1"))
+        {           
+            int i = 1;
+            while(i<=musicList.ToArray().Length)
+            {
+                GameObject a = GameObject.Instantiate(SlcPre, parent.transform) as GameObject;
+                Selection.Add(a);
+                a.GetComponent<RectTransform>().localPosition =new Vector3(20, Selection[0].GetComponent<RectTransform>().localPosition.y -20-50*i, 0);
+                a.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+                i++;
+            }
+            slcMsc = true;
+        }
+        else if (slcMsc == true && Input.GetButtonDown("esc") && select == 0)
+        {
+            int i = 1;
+            while (i <= musicList.ToArray().Length)
+            {
+                Selection[i].SetActive(false);
+            }
+            slcMsc = false ;
+        }
+
     }
 
 	void ShowMusicList()//显示歌曲列表
