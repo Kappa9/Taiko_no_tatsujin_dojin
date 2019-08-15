@@ -197,10 +197,10 @@ TextureImporter:
       name: notes_1
       rect:
         serializedVersion: 2
-        x: 159
-        y: 161
+        x: 158
+        y: 158
         width: 160
-        height: 159
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -218,10 +218,10 @@ TextureImporter:
       name: notes_2
       rect:
         serializedVersion: 2
-        x: 319
-        y: 161
+        x: 318
+        y: 159
         width: 160
-        height: 159
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -239,10 +239,10 @@ TextureImporter:
       name: notes_3
       rect:
         serializedVersion: 2
-        x: 479
-        y: 161
+        x: 478
+        y: 158
         width: 160
-        height: 159
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -260,10 +260,10 @@ TextureImporter:
       name: notes_4
       rect:
         serializedVersion: 2
-        x: 639
-        y: 161
+        x: 638
+        y: 158
         width: 160
-        height: 159
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -281,10 +281,10 @@ TextureImporter:
       name: notes_5
       rect:
         serializedVersion: 2
-        x: 799
-        y: 161
+        x: 798
+        y: 158
         width: 160
-        height: 159
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -303,9 +303,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 960
-        y: 161
+        y: 158
         width: 160
-        height: 159
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -324,9 +324,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1120
-        y: 161
+        y: 158
         width: 160
-        height: 159
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -344,10 +344,10 @@ TextureImporter:
       name: notes_8
       rect:
         serializedVersion: 2
-        x: 1279
-        y: 161
+        x: 1278
+        y: 158
         width: 160
-        height: 159
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -366,9 +366,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1440
-        y: 161
+        y: 158
         width: 160
-        height: 159
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -387,9 +387,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1600
-        y: 161
+        y: 158
         width: 160
-        height: 159
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -408,9 +408,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1760
-        y: 161
-        width: 160
-        height: 159
+        y: 158
+        width: 320
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -425,34 +425,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: notes_12
-      rect:
-        serializedVersion: 2
-        x: 1920
-        y: 161
-        width: 160
-        height: 159
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ab99a1dd4b7b20b45bd461d9f40ee2cb
-      internalID: -1086997201143308891
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: notes_14
       rect:
         serializedVersion: 2
-        x: 159
+        x: 158
         y: 0
         width: 160
-        height: 160
+        height: 155
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -470,10 +449,10 @@ TextureImporter:
       name: notes_15
       rect:
         serializedVersion: 2
-        x: 319
+        x: 318
         y: 0
         width: 160
-        height: 160
+        height: 155
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -491,10 +470,10 @@ TextureImporter:
       name: notes_16
       rect:
         serializedVersion: 2
-        x: 479
+        x: 478
         y: 0
         width: 160
-        height: 160
+        height: 155
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -512,10 +491,10 @@ TextureImporter:
       name: notes_17
       rect:
         serializedVersion: 2
-        x: 639
+        x: 638
         y: 0
         width: 160
-        height: 160
+        height: 155
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -533,10 +512,10 @@ TextureImporter:
       name: notes_18
       rect:
         serializedVersion: 2
-        x: 799
+        x: 800
         y: 0
         width: 160
-        height: 160
+        height: 155
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -554,10 +533,10 @@ TextureImporter:
       name: notes_21
       rect:
         serializedVersion: 2
-        x: 1279
+        x: 1278
         y: 0
         width: 160
-        height: 160
+        height: 155
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -577,8 +556,8 @@ TextureImporter:
         serializedVersion: 2
         x: 1760
         y: 0
-        width: 160
-        height: 160
+        width: 320
+        height: 155
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -588,27 +567,6 @@ TextureImporter:
       bones: []
       spriteID: 97db472e9ec2ed9488a9d332addce6b2
       internalID: -6046229735915339973
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: notes_25
-      rect:
-        serializedVersion: 2
-        x: 1920
-        y: 0
-        width: 160
-        height: 160
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 094d04fe006b86146b514cdee72bab56
-      internalID: -1385129994139488023
       vertices: []
       indices: 
       edges: []
