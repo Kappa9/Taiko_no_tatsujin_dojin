@@ -103,7 +103,7 @@ public class MusicListManager : MonoBehaviour
             slcDft = false;
             Destroy (GameObject.Find("P1(Clone)")); 
         }
-        Debug.Log("");
+        //Debug.Log("");
     }
     void ShowMusicList()//显示歌曲列表
 	{
@@ -200,7 +200,7 @@ public class MusicListManager : MonoBehaviour
 				else if (i.StartsWith("#END") && course.level > 0)
 				{
 					score.courses.Add(course);
-					course.level = 0;
+					course = new MusicScore.Course();
 				}
 			}
 			if (score.title != "" && score.bpm != 0 && score.courses.Count > 0)

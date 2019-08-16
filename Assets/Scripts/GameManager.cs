@@ -70,6 +70,8 @@ public class GameManager : MonoBehaviour
 					hitTime[3] = Time.time;
 					if (hitTime[3] - hitTime[2] > 0.03f) au.PlayOneShot(taikoSound[1]);
 				}
+				if (state == GameState.Selection && (Input.GetButtonDown("Horizontal") || Input.GetButtonDown("Vertical")))
+					au.PlayOneShot(taikoSound[1]);
 			}
 			if (Input.GetButtonDown("Start") && state != GameState.Gameplay)
 				au.PlayOneShot(taikoSound[0]);
