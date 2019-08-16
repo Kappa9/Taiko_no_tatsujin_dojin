@@ -490,6 +490,7 @@ MonoBehaviour:
   - {fileID: 1587535686}
   SlcPre: {fileID: 5785253534156821961, guid: 9e32a9abd26ddc049a2016c30d8ceca3, type: 3}
   parent: {fileID: 812500172}
+  p1: {fileID: 8418938089198361873, guid: 0c1ee434fd5312f4189e7e563155e1f6, type: 3}
 --- !u!1 &1891714099
 GameObject:
   m_ObjectHideFlags: 0
