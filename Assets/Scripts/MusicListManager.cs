@@ -103,7 +103,7 @@ public class MusicListManager : MonoBehaviour
             slcDft = false;
             Destroy (GameObject.Find("P1(Clone)")); 
         }
-
+        Debug.Log("");
     }
     void ShowMusicList()//显示歌曲列表
 	{
