@@ -13,10 +13,13 @@ public class GameManager : MonoBehaviour
 		Title,Selection,Gameplay,Result
 	}
 	public static GameState state = GameState.Selection;
+	public static string musicFullPath;
 	public static bool fading = false;
-	public static MusicScore currentSong = null;
+	public static MusicScore currentSong;
+	public static MusicScore.Course currentcourse;
 	float[] hitTime;
 
+	public AudioSource songManager;
 	public AudioClip[] taikoSound;
 	public AudioClip selectionMusic;
 
@@ -70,15 +73,21 @@ public class GameManager : MonoBehaviour
 					hitTime[3] = Time.time;
 					if (hitTime[3] - hitTime[2] > 0.03f) au.PlayOneShot(taikoSound[1]);
 				}
+				if (state == GameState.Selection)
+				{
+					if (Input.GetButtonDown("Horizontal") || Input.GetButtonDown("Vertical")) au.PlayOneShot(taikoSound[1]);
+					if (Input.GetButtonDown("Cancel")) au.PlayOneShot(taikoSound[1]);
+				}	
 			}
-			if (Input.GetButtonDown("Start") && state != GameState.Gameplay)
-				au.PlayOneShot(taikoSound[0]);
+			if (Input.GetButtonDown("Start") && state != GameState.Gameplay) au.PlayOneShot(taikoSound[0]);
 		}
 	}
 
 	public static List<string> GetMusicList()
 	{
 		string fullPath = "Music/";
+		if (!File.Exists(fullPath)) Directory.CreateDirectory(fullPath);
+		musicFullPath = Application.dataPath.Substring(0, Application.dataPath.LastIndexOf('/')) + "/Music/";
 		List<string> filePaths = new List<string>();
 		string filetype = "*.txt|*.tja";
 		string[] FileType = filetype.Split('|');
@@ -97,7 +106,7 @@ public class GameManager : MonoBehaviour
 
 	public IEnumerator ChangeSong(string name)
 	{
-		UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip("Music/" + name, AudioType.OGGVORBIS);
+		UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip("file://" + musicFullPath + name, AudioType.OGGVORBIS);
 		yield return request.SendWebRequest();
 		if (request.isHttpError || request.isNetworkError)
 		{
@@ -106,8 +115,18 @@ public class GameManager : MonoBehaviour
 		else
 		{
 			AudioClip audio = DownloadHandlerAudioClip.GetContent(request);
-			au.clip = audio;
-			au.loop = false;
+			songManager.clip = audio;
+			songManager.loop = false;
+			songManager.Play();
+		}
+	}
+
+	public static IEnumerator LoadScene(string name)
+	{
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(name);
+		while (!asyncLoad.isDone)
+		{
+			yield return null;
 		}
 	}
 
