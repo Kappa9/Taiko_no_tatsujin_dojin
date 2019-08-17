@@ -105,7 +105,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -281,9 +281,9 @@ TextureImporter:
       name: notes_5
       rect:
         serializedVersion: 2
-        x: 798
+        x: 799
         y: 158
-        width: 160
+        width: 158
         height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -306,8 +306,8 @@ TextureImporter:
         y: 158
         width: 160
         height: 160
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -323,9 +323,9 @@ TextureImporter:
       name: notes_7
       rect:
         serializedVersion: 2
-        x: 1120
+        x: 1124
         y: 158
-        width: 160
+        width: 152
         height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -344,9 +344,9 @@ TextureImporter:
       name: notes_8
       rect:
         serializedVersion: 2
-        x: 1278
+        x: 1279
         y: 158
-        width: 160
+        width: 158
         height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -369,8 +369,8 @@ TextureImporter:
         y: 158
         width: 160
         height: 160
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -386,9 +386,9 @@ TextureImporter:
       name: notes_10
       rect:
         serializedVersion: 2
-        x: 1600
+        x: 1604
         y: 158
-        width: 160
+        width: 152
         height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -512,9 +512,9 @@ TextureImporter:
       name: notes_18
       rect:
         serializedVersion: 2
-        x: 800
+        x: 799
         y: 0
-        width: 160
+        width: 158
         height: 155
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -533,9 +533,9 @@ TextureImporter:
       name: notes_21
       rect:
         serializedVersion: 2
-        x: 1278
+        x: 1279
         y: 0
-        width: 160
+        width: 158
         height: 155
       alignment: 0
       pivot: {x: 0.5, y: 0.5}

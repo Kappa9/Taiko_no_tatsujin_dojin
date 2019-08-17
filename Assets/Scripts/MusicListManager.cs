@@ -109,6 +109,7 @@ public class MusicListManager : MonoBehaviour
 		{
 			Debug.Log("测试加载场景中。。。");
 			LoadMusic(musicList[0], 0);
+			GameManager.state = GameManager.GameState.Gameplay;
 			StartCoroutine(GameManager.LoadScene("GamePlay"));
 		}
     }
@@ -204,7 +205,7 @@ public class MusicListManager : MonoBehaviour
 				else if (i.StartsWith("OFFSET:")) score.offset = float.Parse(i.Substring(7));
 				else if (i.StartsWith("COURSE:")) course.difficulty = int.Parse(i.Substring(7));
 				else if (i.StartsWith("LEVEL:")) course.level = int.Parse(i.Substring(6));
-				else if (i.StartsWith("#END") && course.level > 0)
+				else if (i == "#END" && course.level > 0) 
 				{
 					score.courses.Add(course);
 					course = new MusicScore.Course();
@@ -228,11 +229,11 @@ public class MusicListManager : MonoBehaviour
 		bool inCourse = false;
 		foreach (string i in str)
 		{
-			if (i.Contains("COURSE:" + difficulty.ToString())) inCourse = true;
+			if (i == ("COURSE:" + difficulty.ToString()))  inCourse = true;
 			if (inCourse)
 			{
 				GameManager.currentcourse.course.Add(i);
-				if (i.Contains("#END")) break;
+				if (i == "#END") break;
 			}
 		}
 		StartCoroutine(gameManager.ChangeSong(score.wave));

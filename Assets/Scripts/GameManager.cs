@@ -15,8 +15,8 @@ public class GameManager : MonoBehaviour
 	public static GameState state = GameState.Selection;
 	public static string musicFullPath;
 	public static bool fading = false;
-	public static MusicScore currentSong;
-	public static MusicScore.Course currentcourse;
+	public static MusicScore currentSong = new MusicScore();
+	public static MusicScore.Course currentcourse = new MusicScore.Course();
 	float[] hitTime;
 
 	public AudioSource songManager;

@@ -144,6 +144,7 @@ MonoBehaviour:
   taikoSound:
   - {fileID: 8300000, guid: 232eb881abc4ff746b58a9b85e536879, type: 3}
   - {fileID: 8300000, guid: bcc41139a83a36b4d88a192e5c2599f1, type: 3}
+  - {fileID: 8300000, guid: c56ffef9552535e4d898149f6dbaaed6, type: 3}
   selectionMusic: {fileID: 8300000, guid: ca5b45e1d7e213b48b16939b70825bd8, type: 3}
 --- !u!1 &7013388214300638991
 GameObject:
@@ -222,7 +223,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
