@@ -13,10 +13,12 @@ public class MusicListManager : MonoBehaviour
     public GameObject SlcPre;
     public GameObject parent;
     public GameObject p1;
+    public GameObject statement;
     private int select=0;
     private int selectDft = 0;
     private bool slcMsc;
     private bool slcDft;
+    private bool showStatement;
     void OnEnable()
     {
 		if (FindObjectOfType<GameManager>() != null) gameManager = FindObjectOfType<GameManager>();
@@ -65,7 +67,7 @@ public class MusicListManager : MonoBehaviour
                 ChangeListPosition();
             }
         }
-        if(slcMsc && Input.GetButtonDown("Cancel"))
+        if(slcMsc && Input.GetButtonDown("KaR1"))
         {
             Selection[0].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 45F);
             Selection[0].GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
@@ -76,34 +78,43 @@ public class MusicListManager : MonoBehaviour
             }
             slcMsc = false;
         }
-		if (!slcDft && slcMsc && Input.GetButtonDown("DonR1")) 
+		if (!slcDft && slcMsc&&select!=0 && Input.GetButtonDown("DonR1")) 
         {
             slcDft = true;
-            GameObject a = Instantiate(p1, parent.transform);
+            p1.SetActive(true);  
+        }
+        if (slcDft&&( Input.GetButtonDown("Horizontal") || Input.GetButtonDown("Vertical")))
+        {
             if ((Input.GetAxisRaw("Vertical") < 0 || Input.GetAxisRaw("Horizontal") > 0))
             {
                 selectDft += 1;
-                if (select > musicList[select - 1].courses.ToArray().Length)
+                if (selectDft >= musicList[select - 1].courses.ToArray().Length)
                 {
                     selectDft = 0;
-                }               
+                }
+                p1.GetComponent<RectTransform>().localPosition = new Vector3(-470, 40 - 40 * selectDft, 0);
             }
-            else if ((Input.GetAxisRaw("Vertical") > 0 || Input.GetAxisRaw("Horizontal") < 0))
+            else if (slcDft && ((Input.GetAxisRaw("Vertical") > 0 || Input.GetAxisRaw("Horizontal") < 0)))
             {
                 selectDft -= 1;
                 if (selectDft < 0)
                 {
-                    selectDft = musicList[select - 1].courses.ToArray().Length;
+                    selectDft = musicList[select - 1].courses.ToArray().Length-1;
                 }
+                p1.GetComponent<RectTransform>().localPosition = new Vector3(-470, 40 - 40 * selectDft, 0);
             }
-            a.GetComponent<RectTransform>().localPosition = new Vector3(-470, 40-15*selectDft, 0);
         }
-		if (slcDft && slcMsc && Input.GetButtonDown("KaL1")) 
+        if (slcDft && slcMsc && Input.GetButtonDown("KaL1"))
         {
             slcDft = false;
-            Destroy (GameObject.Find("P1(Clone)")); 
+            p1.GetComponent<RectTransform>().localPosition = new Vector3(-470, 40, 0);
+            selectDft = 0;
+            p1.SetActive(false);
         }
-
+        if(slcDft && slcMsc && Input.GetButtonDown("Start"))
+        {
+            Debug.Log("filepath: "+musicList[select-1].filePath+ "  difficulty: "+selectDft);
+        }
 		//以下为测试用脚本，测试完毕后删除
 		if (Input.GetKeyDown(KeyCode.P))
 		{
@@ -112,6 +123,21 @@ public class MusicListManager : MonoBehaviour
 			GameManager.state = GameManager.GameState.Gameplay;
 			StartCoroutine(GameManager.LoadScene("GamePlay"));
 		}
+        if (!slcMsc&& Input.GetButtonDown("Cancel"))
+        {
+            switch (showStatement)
+            {
+                case false: statement.SetActive(true);showStatement = true; break;
+                case true: statement.SetActive(false); showStatement = false; break;
+            }
+        }
+        if (showStatement)
+        {
+            if (Input.GetButtonDown("Start"))
+            {
+                Application.Quit();
+            }
+        }
     }
     void ShowMusicList()//显示歌曲列表
 	{
@@ -122,6 +148,7 @@ public class MusicListManager : MonoBehaviour
 	{
 
 	}
+    
     void ChangeListPosition()
     {
         if (slcMsc&&select!=0)
