@@ -65,7 +65,6 @@
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GameplayManager.cs" />
     <Compile Include="Assets\Scripts\MusicListManager.cs" />
-    <Compile Include="Assets\Scripts\NoteManager.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Taiko/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
