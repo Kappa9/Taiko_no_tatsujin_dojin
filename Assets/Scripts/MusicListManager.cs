@@ -28,12 +28,16 @@ public class MusicListManager : MonoBehaviour
 		difficultyName = new string[4] { "简单", "普通", "困难", "魔王" };
 		fileList = GameManager.GetMusicList();
 		GetAllMusicInfo();
+		ShowMusicList();
     }
 
     void Update()
     {
-		if (!slcDft) ShowMusicList();
-		else ShowLevelList();
+		if (!GameManager.fading)
+		{
+			if (!slcDft) ShowMusicList();
+			else ShowLevelList();
+		}
 	}
 
     void ShowMusicList() //显示歌曲列表
@@ -112,14 +116,9 @@ public class MusicListManager : MonoBehaviour
 		else if (Input.GetButtonDown("DonL1") || Input.GetButtonDown("DonR1") || Input.GetButtonDown("Start"))
 		{
 			LoadMusic(musicList[select - 1], selectDft);
-			GameManager.state = GameManager.GameState.Gameplay;
-			StartCoroutine(GameManager.LoadScene("GamePlay"));
+			StartCoroutine(gameManager.LoadScene("GamePlay"));
 		}
 	}
-    void LoadGame()
-    {
-        StartCoroutine(GameManager.LoadScene("GamePlay"));
-    }
     void ChangeListPosition()
     {
         if (slcMsc&&select!=0)
@@ -211,6 +210,8 @@ public class MusicListManager : MonoBehaviour
 
 	void LoadMusic(MusicScore score, int difficulty)
 	{
+		gameManager.songManager.Stop();
+		gameManager.songManager.loop = false;
 		string[] str = GameManager.ReadFile(score.filePath);
 		GameManager.currentSong = new MusicScore();
 		GameManager.currentcourse = new MusicScore.Course();

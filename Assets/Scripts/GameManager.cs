@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
 	public static MusicScore.Course currentcourse = new MusicScore.Course();
 	float[] hitTime;
 
+	public Animator fadingScreen;
 	public AudioSource songManager;
 	public AudioClip[] taikoSound;
 	public AudioClip selectionMusic;
@@ -79,7 +80,11 @@ public class GameManager : MonoBehaviour
 					if (Input.GetButtonDown("Cancel")) au.PlayOneShot(taikoSound[1]);
 				}	
 			}
-			if (Input.GetButtonDown("Start") && state != GameState.Gameplay) au.PlayOneShot(taikoSound[0]);
+			if (Input.GetButtonDown("Start") && state != GameState.Gameplay)
+			{
+				au.PlayOneShot(taikoSound[0]);
+				if (state == GameState.Title) StartCoroutine(LoadScene("Song_Selection"));
+			}
 		}
 	}
 
@@ -116,24 +121,42 @@ public class GameManager : MonoBehaviour
 		{
 			AudioClip audio = DownloadHandlerAudioClip.GetContent(request);
 			songManager.clip = audio;
-			songManager.loop = false;
-			songManager.Play();
 		}
 	}
 
-	public static IEnumerator LoadScene(string name)
+	public IEnumerator LoadScene(string name)
 	{
+		fading = true;
+		fadingScreen.Play("Fading");
+		yield return new WaitForSeconds(1.5f);
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(name);
 		while (!asyncLoad.isDone)
-		{
 			yield return null;
-		}
 	}
 
 	void OnSceneChange(Scene scene, LoadSceneMode mode)
 	{
-
+		switch (scene.name)
+		{
+			case "Title":
+				state = GameState.Title;
+				songManager.clip = selectionMusic;
+				songManager.loop = true;
+				songManager.Play();
+				break;
+			case "GamePlay": state = GameState.Gameplay; break;
+			case "Song_Selection":state = GameState.Selection; break;
+		}
+		StartCoroutine(FadeOut());
 	}
+
+	IEnumerator FadeOut()
+	{
+		fadingScreen.Play("Fadeout");
+		yield return new WaitForSeconds(1);
+		fading = false;
+	}
+	
 }
 public class MusicScore
 {

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class GameplayManager : MonoBehaviour
 {
 	public GameObject[] note;
-	public Transform noteParent;
+	public GameObject noteParent;
 	public Transform hitPoint;
 	public Animator[] interact_Control;
 	public GameObject[] interact_Hit;
@@ -31,13 +31,16 @@ public class GameplayManager : MonoBehaviour
 		hitTime = new float[4];
 		basicpoint = new int[5];
 		DisplayInformation();
-		GenerateGame();
+		StartCoroutine(GenerateGame());
 	}
 
     void Update()
     {
-		OnControl();
-		CheckGameState();
+		if (!GameManager.fading)
+		{
+			OnControl();
+			CheckGameState();
+		}
     }
 
 	void LateUpdate()
@@ -107,7 +110,7 @@ public class GameplayManager : MonoBehaviour
 		difficultyText.text = str[GameManager.currentcourse.difficulty];
 	}
 
-	void GenerateGame() //每拍(四分音符)长度3，每小节4拍总长12，每拍秒数=60/BPM，每小节秒数=240/BPM
+	IEnumerator GenerateGame() //每拍(四分音符)长度3，每小节4拍总长12，每拍秒数=60/BPM，每小节秒数=240/BPM
 	{
 		int measure = 4;
 		int maxCombo = 0;
@@ -180,12 +183,14 @@ public class GameplayManager : MonoBehaviour
 				}
 			}
 		}
+		yield return new WaitForSeconds(2);
+		noteParent.GetComponent<Rigidbody2D>().velocity = Vector2.left * 5;
 	}
 
 	GameObject GenerateNote(int index)
 	{
-		Vector2 pos = new Vector2(9.09f, 1.29f);
-		return Instantiate(note[index], pos + Vector2.right * notePos, Quaternion.identity, noteParent);
+		Vector2 pos = new Vector2(21.09f, 1.29f);
+		return Instantiate(note[index], pos + Vector2.right * notePos, Quaternion.identity, noteParent.transform);
 	}
 
 	void DestroyNote()
