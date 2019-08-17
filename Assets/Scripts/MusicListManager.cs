@@ -116,7 +116,10 @@ public class MusicListManager : MonoBehaviour
 			StartCoroutine(GameManager.LoadScene("GamePlay"));
 		}
 	}
-    
+    void LoadGame()
+    {
+        StartCoroutine(GameManager.LoadScene("GamePlay"));
+    }
     void ChangeListPosition()
     {
         if (slcMsc&&select!=0)
