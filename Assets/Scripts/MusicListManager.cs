@@ -114,6 +114,7 @@ public class MusicListManager : MonoBehaviour
         if(slcDft && slcMsc && Input.GetButtonDown("Start"))
         {
             Debug.Log("filepath: "+musicList[select-1].filePath+ "  difficulty: "+selectDft);
+            GameObject.Find("Fading_Screen").SetActive(true);
         }
 		//以下为测试用脚本，测试完毕后删除
 		if (Input.GetKeyDown(KeyCode.P))
@@ -147,7 +148,10 @@ public class MusicListManager : MonoBehaviour
 	{
 
 	}
-    
+    void LoadGame()
+    {
+        StartCoroutine(GameManager.LoadScene("GamePlay"));
+    }
     void ChangeListPosition()
     {
         if (slcMsc&&select!=0)
