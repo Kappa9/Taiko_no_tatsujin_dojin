@@ -112,63 +112,71 @@ public class GameplayManager : MonoBehaviour
 		int measure = 4;
 		int maxCombo = 0;
 		int rendaState = 0;
+		bool inCourse = false;
 		foreach (string i in GameManager.currentcourse.course)
 		{
-			if (!i.StartsWith("#"))
+			if (i == "#START") inCourse = true;
+			if (inCourse)
 			{
-				foreach(char c in i.ToCharArray())
+				if (!i.StartsWith("#"))
 				{
-					if (c != ',')
+					GenerateNote(0);
+					foreach (char c in i.ToCharArray())
 					{
-						int num = int.Parse(c.ToString());
-						if (rendaState == 0)
+						if (c != ',')
 						{
-							if (num >= 1 && num <= 4)
+							int num = int.Parse(c.ToString());
+							if (rendaState == 0)
 							{
-								GenerateNote(num);
-								maxCombo++;
-							}
-							else if(num == 5 || num == 7)
-							{
-								rendaState = 1;
-								GameObject obj = GenerateNote(5);
-								obj.transform.localScale = new Vector3(2 * measure / (i.Length - 1), 1, 1);
-							}
-							else if (num == 6 || num == 9)
-							{
-								rendaState = 2;
-								GameObject obj = GenerateNote(6);
-								obj.transform.localScale = new Vector3(2 * measure / (i.Length - 1), 1, 1);
-							}
-						}
-						else
-						{
-							if (num == 8)
-							{
-								GenerateNote(rendaState + 8);
-								rendaState = 0;
+								if (num >= 1 && num <= 4)
+								{
+									GenerateNote(num);
+									maxCombo++;
+								}
+								else if (num == 5 || num == 7)
+								{
+									rendaState = 1;
+									GenerateNote(5);
+									GameObject obj = GenerateNote(7);
+									obj.transform.localScale = new Vector3(2.0f * measure / (i.Length - 1), 1, 1);
+								}
+								else if (num == 6 || num == 9)
+								{
+									rendaState = 2;
+									GenerateNote(6);
+									GameObject obj = GenerateNote(8);
+									obj.transform.localScale = new Vector3(2.0f * measure / (i.Length - 1), 1, 1);
+								}
 							}
 							else
 							{
-								GameObject obj = GenerateNote(rendaState + 6);
-								obj.transform.localScale = new Vector3(2 * measure / (i.Length - 1), 1, 1);
+								if (num == 8)
+								{
+									GenerateNote(rendaState + 8);
+									rendaState = 0;
+								}
+								else
+								{
+									GameObject obj = GenerateNote(rendaState + 6);
+									obj.transform.localScale = new Vector3(2.0f * measure / (i.Length - 1), 1, 1);
+								}
 							}
+							notePos += 3.0f * measure / (i.Length - 1);
 						}
-						notePos += 3 * measure / (i.Length - 1);
 					}
 				}
-			}
-			else
-			{
-				GameObject obj = GenerateNote(11);
-				obj.name = i;
-				switch (i)
+				else
 				{
-					case "#START":
-						float offset = GameManager.currentSong.offset / 60 * GameManager.currentSong.bpm * 3;
-						obj.transform.Translate(Vector3.right * offset); //Offset/60*BPM=偏移拍数p,p*3=偏移坐标
-						break;
-					case "#END": GenerateNote(0); break;
+					GameObject obj = GenerateNote(11);
+					obj.name = i;
+					switch (i)
+					{
+						case "#START":
+							float offset = GameManager.currentSong.offset / 60 * GameManager.currentSong.bpm * 3;
+							obj.transform.Translate(Vector3.right * offset); //Offset/60*BPM=偏移拍数p,p*3=偏移坐标
+							break;
+						case "#END": GenerateNote(0); break;
+					}
 				}
 			}
 		}
