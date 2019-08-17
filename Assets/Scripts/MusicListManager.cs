@@ -9,16 +9,17 @@ public class MusicListManager : MonoBehaviour
 	GameManager gameManager;
 	List<string> fileList;
 	List<MusicScore> musicList;
-    public List<GameObject> Selection;
+    List<GameObject> Selection;
     public GameObject SlcPre;
     public GameObject parent;
     public GameObject p1;
     public GameObject statement;
+    public Text stateText;
 
 	private int select = 0;
     private int selectDft = 0;
-    private bool slcMsc;
-    private bool slcDft;
+	private bool slcMsc = false;
+	private bool slcDft = false;
 	private bool showStatement;
 	private string[] difficultyName;
 
@@ -27,6 +28,7 @@ public class MusicListManager : MonoBehaviour
 		if (FindObjectOfType<GameManager>() != null) gameManager = FindObjectOfType<GameManager>();
 		difficultyName = new string[4] { "简单", "普通", "困难", "魔王" };
 		fileList = GameManager.GetMusicList();
+		Selection = new List<GameObject>();
 		GetAllMusicInfo();
 		ShowMusicList();
     }
@@ -44,27 +46,18 @@ public class MusicListManager : MonoBehaviour
 	{
 		if (!slcMsc)
 		{
-			if (Input.GetButtonDown("Start") && showStatement) Application.Quit();
-			else if (Input.GetButtonDown("DonL1") || Input.GetButtonDown("DonR1") || Input.GetButtonDown("Start"))
+			int j = 0;
+			foreach (MusicScore i in musicList)
 			{
-				Selection[0].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 60F);
-				int i = 1;
-				while (i <= musicList.Count)
-				{
-					GameObject a = GameObject.Instantiate(SlcPre, parent.transform) as GameObject;
-					Selection.Add(a);
-					a.GetComponent<RectTransform>().localPosition = new Vector3(20, Selection[0].GetComponent<RectTransform>().localPosition.y - 20 - 50 * i, 0);
-					a.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-					a.transform.GetChild(1).GetComponent<Text>().text = musicList[i - 1].title + " " + musicList[i - 1].subtitle;
-					i++;
-				}
-				slcMsc = true;
+				GameObject a = Instantiate(SlcPre, parent.transform);
+				Selection.Add(a);
+				a.GetComponent<RectTransform>().localPosition = new Vector3(0, Selection[0].GetComponent<RectTransform>().localPosition.y - 50 * j, 0);
+				a.GetComponent<RectTransform>().localScale = Vector3.one;
+				a.transform.GetChild(1).GetComponent<Text>().text = i.title + " " + i.subtitle;
+				j++;
 			}
-			else if (Input.GetButtonDown("Cancel"))
-			{
-				showStatement = statement.activeInHierarchy;
-				statement.SetActive(!showStatement);
-			}
+			ChangeListPosition();
+			slcMsc = true;
 		}
 		else
 		{
@@ -73,25 +66,22 @@ public class MusicListManager : MonoBehaviour
 				//GetAxisRaw与GetKey(Down)对照：横坐标大于0为d，小于0为a；纵坐标大于0为w，小于0为s
 				if (Input.GetButtonDown("KaR1") || Input.GetAxisRaw("Vertical") < 0 || Input.GetAxisRaw("Horizontal") > 0) select++;
 				else if (Input.GetButtonDown("KaL1") || Input.GetAxisRaw("Vertical") > 0 || Input.GetAxisRaw("Horizontal") < 0) select--;
-				if (select > musicList.Count) select = 0;
-				else if (select < 0) select = musicList.Count;
+				if (select >= musicList.Count) select = 0;
+				else if (select < 0) select = musicList.Count - 1;
 				ChangeListPosition();
 			}
 			else if (Input.GetButtonDown("Cancel"))
 			{
-				Selection[0].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 45F);
-				Selection[0].GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
-				for (int i = musicList.Count; i > 0; i--)
-				{
-					Destroy(Selection[i]);
-					Selection.Remove(Selection[i]);
-				}
-				slcMsc = false;
+				showStatement = statement.activeInHierarchy;
+				statement.SetActive(!showStatement);
 			}
-			else if ((Input.GetButtonDown("DonL1") || Input.GetButtonDown("DonR1")) && select != 0)
+			else if (Input.GetButtonDown("DonL1") || Input.GetButtonDown("DonR1") || Input.GetButtonDown("Start")) 
 			{
+				if (Input.GetButtonDown("Start") && showStatement) Application.Quit();
+				stateText.text = "请选择难度，按下 Esc 键取消";
 				slcDft = true;
 				p1.SetActive(true);
+				p1.GetComponent<RectTransform>().localPosition = new Vector3(-490, 50, 0);
 			}
 		}
 	}
@@ -102,78 +92,55 @@ public class MusicListManager : MonoBehaviour
 		{
 			if (Input.GetButtonDown("KaR1") || Input.GetAxisRaw("Vertical") < 0 || Input.GetAxisRaw("Horizontal") > 0) selectDft++;
 			else if (Input.GetButtonDown("KaL1") || Input.GetAxisRaw("Vertical") > 0 || Input.GetAxisRaw("Horizontal") < 0) selectDft--;
-			if (selectDft >= musicList[select - 1].courses.Count) selectDft = 0;
-			else if (selectDft < 0) selectDft = musicList[select - 1].courses.Count - 1;
-			p1.GetComponent<RectTransform>().localPosition = new Vector3(-470, 40 - 40 * selectDft, 0);
+			if (selectDft >= musicList[select].courses.Count) selectDft = 0;
+			else if (selectDft < 0) selectDft = musicList[select].courses.Count - 1;
+			p1.GetComponent<RectTransform>().localPosition = new Vector3(-490, 50 - 43 * selectDft, 0);
 		}
 		else if (Input.GetButtonDown("Cancel"))
 		{
+			stateText.text = "按下 Esc 键打开游戏帮助与菜单";
 			slcDft = false;
-			p1.GetComponent<RectTransform>().localPosition = new Vector3(-470, 40, 0);
+			p1.GetComponent<RectTransform>().localPosition = new Vector3(-490, 50, 0);
 			selectDft = 0;
 			p1.SetActive(false);
 		}
 		else if (Input.GetButtonDown("DonL1") || Input.GetButtonDown("DonR1") || Input.GetButtonDown("Start"))
 		{
-			LoadMusic(musicList[select - 1], selectDft);
+			LoadMusic(musicList[select], selectDft);
 			StartCoroutine(gameManager.LoadScene("GamePlay"));
 		}
 	}
     void ChangeListPosition()
     {
-        if (slcMsc&&select!=0)
-        {
-            int j = 0;
-            while (j <= musicList.Count)
-            {
-                if (j < select)
-                {
-                    Selection[j].GetComponent<RectTransform>().localPosition = new Vector3(Selection[j].GetComponent<RectTransform>().localPosition.x, 90 + 50 * (select - j), 0);
-                    Selection[j].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 45F);
-                    if (j == 0)
-                    {
-                        Selection[j].transform.GetChild(1).GetComponent<Text>().text = "Music";
-                    }
-                    else
-                    {
-                        Selection[j].transform.GetChild(1).GetComponent<Text>().text = musicList[j - 1].title + " " + musicList[j - 1].subtitle;
-                    }
-                }
-                if (j == select)
-                {
-                    Selection[j].GetComponent<RectTransform>().localPosition = new Vector3(Selection[j].GetComponent<RectTransform>().localPosition.x, 0, 0);                   
-                    Selection[j].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 220F);
-                    Selection[j].transform.GetChild(1).GetComponent<Text>().text = musicList[j - 1].title + " " + musicList[j - 1].subtitle ;
-                    foreach (MusicScore.Course k in musicList[j - 1].courses)
-                    {
-						Selection[j].transform.GetChild(1).GetComponent<Text>().text += "\n" + "   ◯" + difficultyName[k.difficulty];
-                        for (int m = 1; m <= k.level; m++)
-							Selection[j].transform.GetChild(1).GetComponent<Text>().text += "★";
-					}
-                }
-                if (j > select)
-                {
-                    Selection[j].GetComponent<RectTransform>().localPosition = new Vector3(Selection[j].GetComponent<RectTransform>().localPosition.x, -90 + 50 * (select - j), 0);
-                    Selection[j].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 45F);
-                    Selection[j].transform.GetChild(1).GetComponent<Text>().text = musicList[j - 1].title + " " + musicList[j - 1].subtitle;
-                }
-                j++;
-            }
-        }
-        else
-        {
-            Selection[0].GetComponent<RectTransform>().localPosition = new Vector3(Selection[0].GetComponent<RectTransform>().localPosition.x, 0, 0);
-            Selection[0].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 60F);
-            int i = 1;
-            while (i <= musicList.Count)
-            {
-
-                Selection[i].GetComponent<RectTransform>().localPosition = new Vector3(20, Selection[0].GetComponent<RectTransform>().localPosition.y - 20 - 50 * i, 0);
-                Selection[i].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 45F);
-                Selection[i].transform.GetChild(1).GetComponent<Text>().text = musicList[i - 1].title + " " + musicList[i - 1].subtitle;
-                i++;
-            }
-        }
+		int j = 0;
+		while (j < musicList.Count)
+		{
+			if (j < select)
+			{
+				Selection[j].GetComponent<RectTransform>().localPosition = new Vector3(Selection[j].GetComponent<RectTransform>().localPosition.x, 100 + 55 * (select - j), 0);
+				Selection[j].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 50F);
+				Selection[j].transform.GetChild(1).GetComponent<Text>().text = musicList[j].title + " " + musicList[j].subtitle;
+			}
+			if (j == select)
+			{
+				Selection[j].GetComponent<RectTransform>().localPosition = new Vector3(Selection[j].GetComponent<RectTransform>().localPosition.x, 0, 0);
+				Selection[j].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 250F);
+				Selection[j].transform.GetChild(1).GetComponent<Text>().text = musicList[j].title + " " + musicList[j].subtitle;
+				foreach (MusicScore.Course k in musicList[j].courses)
+				{
+					Selection[j].transform.GetChild(1).GetComponent<Text>().text += "\n" + "   ◯" + difficultyName[k.difficulty];
+					for (int m = 1; m <= k.level; m++)
+						Selection[j].transform.GetChild(1).GetComponent<Text>().text += "★";
+				}
+			}
+			if (j > select)
+			{
+				Selection[j].GetComponent<RectTransform>().localPosition = new Vector3(Selection[j].GetComponent<RectTransform>().localPosition.x, -100 + 55 * (select - j), 0);
+				Selection[j].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 50F);
+				Selection[j].transform.GetChild(1).GetComponent<Text>().text = musicList[j].title + " " + musicList[j].subtitle;
+			}
+			j++;
+		}
     }
 
 	void GetAllMusicInfo()
