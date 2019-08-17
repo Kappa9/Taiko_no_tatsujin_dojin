@@ -1,17 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameplayManager : MonoBehaviour
 {
 	public Animator[] interact_Control;
 	public GameObject[] interact_Hit;
+	public Image soulGauge;//全长866，合格线683，剩余183
+	public Text[] title;
+
+	int score;
+	int soulPoint;
 
 	float[] hitTime;
+	int[] basicpoint;
 
     void OnEnable()
     {
 		hitTime = new float[4];
+		basicpoint = new int[6];
+		SetBasicPoint();
 	}
 
     void Update()
@@ -51,4 +60,8 @@ public class GameplayManager : MonoBehaviour
 		}
 	}
 
+	void SetBasicPoint()
+	{
+
+	}
 }

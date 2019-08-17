@@ -42,6 +42,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Note
+    uniqueID: 3476948281
+    locked: 0
   - name: Taiko
     uniqueID: 4141597055
     locked: 0

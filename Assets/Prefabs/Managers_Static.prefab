@@ -140,6 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d81ff527e2a385947a70febd8cad0eed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  songManager: {fileID: 7013388215595070326}
   taikoSound:
   - {fileID: 8300000, guid: 232eb881abc4ff746b58a9b85e536879, type: 3}
   - {fileID: 8300000, guid: bcc41139a83a36b4d88a192e5c2599f1, type: 3}

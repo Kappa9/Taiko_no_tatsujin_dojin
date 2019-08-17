@@ -27,7 +27,8 @@ public class MusicListManager : MonoBehaviour
 
     void Update()
     {
-        if (slcMsc == false && Input.GetButtonDown("DonL1"))
+		//if (!slcMsc && (Input.GetButtonDown("DonL1") || Input.GetButtonDown("DonR1"))) 
+		if (!slcMsc && Input.GetButtonDown("DonL1")) 
         {
             Selection[0].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 60F);
             int i = 1;
@@ -42,7 +43,7 @@ public class MusicListManager : MonoBehaviour
             }
             slcMsc = true;
         }
-        if (slcDft==false&&slcMsc == true && (Input.GetButtonDown("Horizontal") || Input.GetButtonDown("Vertical")))   //要用GetButtonDown而非GetButton，防止按键持续生效
+		if (!slcDft && slcMsc && (Input.GetButtonDown("Horizontal") || Input.GetButtonDown("Vertical"))) 
         {
             //GetAxisRaw与GetKey(Down)对照：横坐标大于0为d，小于0为a；纵坐标大于0为w，小于0为s
             if ((Input.GetAxisRaw("Vertical") < 0 || Input.GetAxisRaw("Horizontal") > 0))
@@ -63,9 +64,8 @@ public class MusicListManager : MonoBehaviour
                 }
                 ChangeListPosition();
             }
-
         }
-        if(slcMsc == true && Input.GetButtonDown("Cancel"))
+        if(slcMsc && Input.GetButtonDown("Cancel"))
         {
             Selection[0].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 45F);
             Selection[0].GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
@@ -76,7 +76,7 @@ public class MusicListManager : MonoBehaviour
             }
             slcMsc = false;
         }
-        if(slcDft==false&&slcMsc&& Input.GetButtonDown("DonR1"))
+		if (!slcDft && slcMsc && Input.GetButtonDown("DonR1")) 
         {
             slcDft = true;
             GameObject a = Instantiate(p1, parent.transform);
@@ -98,12 +98,19 @@ public class MusicListManager : MonoBehaviour
             }
             a.GetComponent<RectTransform>().localPosition = new Vector3(-470, 40-15*selectDft, 0);
         }
-        if (slcDft == true&& slcMsc && Input.GetButtonDown("KaL1"))
+		if (slcDft && slcMsc && Input.GetButtonDown("KaL1")) 
         {
             slcDft = false;
             Destroy (GameObject.Find("P1(Clone)")); 
         }
-        //Debug.Log("");
+
+		//以下为测试用脚本，测试完毕后删除
+		if (Input.GetKeyDown(KeyCode.P))
+		{
+			Debug.Log("测试加载场景中。。。");
+			LoadMusic(musicList[0], 0);
+			StartCoroutine(GameManager.LoadScene("GamePlay"));
+		}
     }
     void ShowMusicList()//显示歌曲列表
 	{
@@ -214,18 +221,20 @@ public class MusicListManager : MonoBehaviour
 	void LoadMusic(MusicScore score, int difficulty)
 	{
 		string[] str = GameManager.ReadFile(score.filePath);
-		
+		GameManager.currentSong = new MusicScore();
+		GameManager.currentcourse = new MusicScore.Course();
+		GameManager.currentSong = score;
+		GameManager.currentcourse = score.courses.Find(s => s.difficulty == difficulty);
 		bool inCourse = false;
 		foreach (string i in str)
 		{
 			if (i.Contains("COURSE:" + difficulty.ToString())) inCourse = true;
 			if (inCourse)
 			{
-				score.courses.Find(s => s.difficulty == difficulty).course.Add(i);
+				GameManager.currentcourse.course.Add(i);
 				if (i.Contains("#END")) break;
 			}
 		}
-		GameManager.currentSong = score;
-		gameManager.StartCoroutine("ChangeSound", score.wave);
+		StartCoroutine(gameManager.ChangeSong(score.wave));
 	}
 }
