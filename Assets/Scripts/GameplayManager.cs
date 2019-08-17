@@ -195,9 +195,9 @@ public class GameplayManager : MonoBehaviour
 
 	void DestroyNote()
 	{
-		RaycastHit2D[] hit = Physics2D.LinecastAll(Vector2.left * 5, Vector2.left * 6);
+		Collider2D[] hit = Physics2D.OverlapPointAll(new Vector2(-5, 1.3f));
 		if (hit != null)
-			foreach (RaycastHit2D i in hit)
-				Destroy(i.collider.gameObject);
+			foreach (Collider2D i in hit)
+				Destroy(i.gameObject);
 	}
 }
