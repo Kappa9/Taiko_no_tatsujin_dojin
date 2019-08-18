@@ -8,4 +8,8 @@ public class DestroyObject : MonoBehaviour
 	{
 		Destroy(gameObject);
 	}
+	public void DisableObj()
+	{
+		gameObject.SetActive(false);
+	}
 }

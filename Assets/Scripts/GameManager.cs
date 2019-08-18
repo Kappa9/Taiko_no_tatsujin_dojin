@@ -14,13 +14,13 @@ public class GameManager : MonoBehaviour
 	}
 	public static GameState state = GameState.Selection;
 	public static string musicFullPath;
-	public static bool fading = false;
+	public static bool fading = true;
 	public static MusicScore currentSong = new MusicScore();
 	public static MusicScore.Course currentcourse = new MusicScore.Course();
 	float[] hitTime;
 
-	public Animator fadingScreen;
-	public AudioSource songManager;
+	public static Animator fadingScreen;
+	public static AudioSource songManager;
 	public AudioClip[] taikoSound;
 	public AudioClip selectionMusic;
 
@@ -37,6 +37,8 @@ public class GameManager : MonoBehaviour
 
 	void OnEnable()
 	{
+		songManager = transform.parent.GetChild(1).GetComponent<AudioSource>();
+		fadingScreen = transform.parent.GetChild(2).GetComponent<Animator>();
 		hitTime = new float[4];
 		SceneManager.sceneLoaded += OnSceneChange;
 		au = GetComponent<AudioSource>();
@@ -82,7 +84,7 @@ public class GameManager : MonoBehaviour
 			if (Input.GetButtonDown("Start") && state != GameState.Gameplay)
 			{
 				au.PlayOneShot(taikoSound[0]);
-				if (state == GameState.Title) StartCoroutine(LoadScene("Song_Selection"));
+				if (state != GameState.Selection) StartCoroutine(LoadScene("Song_Selection"));
 			}
 		}
 	}
@@ -134,14 +136,14 @@ public class GameManager : MonoBehaviour
 	{
 		switch (scene.name)
 		{
-			case "Title":
-				state = GameState.Title;
+			case "Title": state = GameState.Title; break;
+			case "GamePlay": state = GameState.Gameplay; break;
+			case "Song_Selection":
+				state = GameState.Selection;
 				songManager.clip = selectionMusic;
 				songManager.loop = true;
 				songManager.Play();
 				break;
-			case "GamePlay": state = GameState.Gameplay; break;
-			case "Song_Selection":state = GameState.Selection; break;
 		}
 		StartCoroutine(FadeOut());
 	}

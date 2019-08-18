@@ -10,6 +10,7 @@ public class GameplayManager : MonoBehaviour
 	public Transform parent;
 	public Transform hitPoint;
 	public Animator donchan;
+	public GameObject[] dancer;
 	public Animator[] soulAnimation;
 	public Animator[] interact_Control;
 	public GameObject gogoTimebg;
@@ -24,13 +25,19 @@ public class GameplayManager : MonoBehaviour
 	public GameObject[] hitExcellent;
 	public GameObject[] hitGood;
 	public GameObject[] hitBad;
+	public GameObject[] comboObjects;
+	public GameObject[] rendaBalloon;
 	public GameObject resultScreen;
+	public Sprite[] resultScreenSprite;
+	public RectTransform resultSoulGauge;
+	public Image[] resultImage;
 	public Text[] resultText;
 
 	int score = 0;
 	int soulPoint = 0;
 	int[] count;
 	int currentCombo = 0;
+	int currentRenda = 0;
 	int hitScore;
 
 	GameManager gameManager;
@@ -47,6 +54,7 @@ public class GameplayManager : MonoBehaviour
 	void OnEnable()
     {
 		if (FindObjectOfType<GameManager>() != null) gameManager = FindObjectOfType<GameManager>();
+		donchan.speed = 0.5f;
 		mask = LayerMask.GetMask("Note");
 		hitTime = new float[4];
 		basicpoint = new int[5];
@@ -79,14 +87,13 @@ public class GameplayManager : MonoBehaviour
 			{
 				switch (i.name)
 				{
-					case "#START":
-						GameManager manager = FindObjectOfType<GameManager>();
-						manager.songManager.Play();
-						break;
+					case "#START": GameManager.songManager.Play(); break;
 					case "#GOGOSTART": gogoTime = true; break; 
 					case "#GOGOEND": gogoTime = false; break;
+					case "#RENDAEND": StartCoroutine(DisableRendaBalloon()); break;
 					case "#END": StartCoroutine(ShowResult()); break;
 				}
+				Destroy(i.gameObject);
 			}
 		gogoTimebg.SetActive(gogoTime);
 		donchan.SetBool("GogoTime", gogoTime);
@@ -95,8 +102,12 @@ public class GameplayManager : MonoBehaviour
 		if (currentCombo >= 10)
 		{
 			comboText.text = currentCombo.ToString();
-			if (currentCombo >= 100) comboText.fontSize = 72;
+			if (currentCombo < 30) hitScore = basicpoint[0] + basicpoint[1];
+			else if (currentCombo < 50) hitScore = basicpoint[0] + basicpoint[1] * 2;
+			else if (currentCombo < 100) hitScore = basicpoint[0] + basicpoint[1] * 4;
+			else { comboText.fontSize = 72; hitScore = basicpoint[0] + basicpoint[1] * 8; }
 		}
+		else hitScore = basicpoint[0];
 		if (soulPoint >= requireSoulPoint[GameManager.currentcourse.difficulty])
 		{
 			float width = 683 + 183 * (soulPoint - requireSoulPoint[GameManager.currentcourse.difficulty]) / (10000 - requireSoulPoint[GameManager.currentcourse.difficulty]);
@@ -153,6 +164,7 @@ public class GameplayManager : MonoBehaviour
 			interact_Control[3].Play("Active");
 			interact_Control[5].Play("Active");
 		}
+		if (Input.GetButtonDown("Cancel")) StartCoroutine(gameManager.LoadScene("Song_Selection"));
 	}
 
 	void DisplayInformation()
@@ -162,6 +174,17 @@ public class GameplayManager : MonoBehaviour
 		difficultySymbol.sprite = difficultySprite[GameManager.currentcourse.difficulty];
 		string[] str = new string[4] { "简单", "普通", "困难", "魔王" };
 		difficultyText.text = str[GameManager.currentcourse.difficulty];
+	}
+
+	IEnumerator DisableRendaBalloon()
+	{
+		currentRenda = 0;
+		yield return new WaitForSeconds(0.8f);
+		if (currentRenda == 0)
+		{
+			rendaBalloon[0].SetActive(false);
+			rendaBalloon[1].GetComponent<Text>().text = "";
+		}
 	}
 
 	IEnumerator GenerateGame() //每拍(四分音符)长度3，每小节4拍总长12，每拍秒数=60/BPM，每小节秒数=240/BPM
@@ -190,19 +213,24 @@ public class GameplayManager : MonoBehaviour
 									GenerateNote(num);
 									maxCombo++;
 								}
-								else if (num == 5 || num == 7)
+								else if (num >= 5 && num <= 6)
 								{
-									rendaState = 1;
-									GenerateNote(5);
-									GameObject obj = GenerateNote(7);
+									rendaState = num - 4;
+									GenerateNote(num);
+									GameObject obj = GenerateNote(num + 2);
 									obj.transform.localScale = new Vector3(2.0f * measure / (i.Length - 1), 1, 1);
 								}
-								else if (num == 6 || num == 9)
+								else if (num == 7 || num == 9)
 								{
-									rendaState = 2;
-									GenerateNote(6);
-									GameObject obj = GenerateNote(8);
-									obj.transform.localScale = new Vector3(2.0f * measure / (i.Length - 1), 1, 1);
+									GenerateNote(5);
+									GameObject slide = GenerateNote(7);
+									GameObject end = GenerateNote(9);
+									GameObject obj = GenerateNote(11);
+									slide.transform.localScale = new Vector3(2.0f * measure / (i.Length - 1), 1, 1);
+									end.transform.Translate(Vector3.right * 3.0f * measure / (i.Length - 1));
+									obj.name = "#RENDAEND";
+									obj.transform.Translate(Vector3.right * 3.0f * measure / (i.Length - 1));
+									obj.transform.Translate(Vector3.right * 0.5f);
 								}
 							}
 							else
@@ -210,6 +238,9 @@ public class GameplayManager : MonoBehaviour
 								if (num == 8)
 								{
 									GenerateNote(rendaState + 8);
+									GameObject obj = GenerateNote(11);
+									obj.name = "#RENDAEND";
+									obj.transform.Translate(Vector3.right * 0.5f);
 									rendaState = 0;
 								}
 								else
@@ -258,8 +289,10 @@ public class GameplayManager : MonoBehaviour
 		if (hit != null)
 			foreach (RaycastHit2D i in hit)
 			{
-				if (i.collider.OverlapPoint(new Vector2(-3.75f, 1.3f)) && (i.collider.tag == "Don" || i.collider.name == "Ka"))
+				if (i.collider.OverlapPoint(new Vector2(-3.75f, 1.3f)) && (i.collider.tag == "Don" || i.collider.tag == "Ka"))
 				{
+					Destroy(i.collider);
+					Destroy(i.collider.gameObject, 1);
 					miss = true;
 					donchan.SetBool("Miss", true);
 					if (!gogoTime) donchan.Play("Miss");
@@ -269,9 +302,9 @@ public class GameplayManager : MonoBehaviour
 					comboText.text = "";
 					comboText.fontSize = 54;
 					soulPoint -= basicpoint[4];
-					soulPoint = System.Math.Min(soulPoint, 0);
+					soulPoint = System.Math.Max(soulPoint, 0);
 				}
-				if (i.collider.OverlapPoint(new Vector2(-5f, 1.3f))) Destroy(i.collider.gameObject);
+				if (i.collider.OverlapPoint(new Vector2(-4.5f, 1.3f)) && !i.collider.OverlapPoint(new Vector2(-3.6f, 1.3f))) Destroy(i.collider.gameObject);
 			}
 				
 	}
@@ -296,7 +329,7 @@ public class GameplayManager : MonoBehaviour
 						comboText.text = "";
 						comboText.fontSize = 54;
 						soulPoint -= basicpoint[4];
-						soulPoint = System.Math.Min(soulPoint, 0);
+						soulPoint = System.Math.Max(soulPoint, 0);
 						Instantiate(hitBad[0], parent);
 					}
 					else
@@ -304,12 +337,16 @@ public class GameplayManager : MonoBehaviour
 						miss = false;
 						donchan.SetBool("Miss", false);
 						currentCombo++;
-						currentCombo = System.Math.Max(currentCombo, 9999);
-						if (count[5] < currentCombo) count[5] = currentCombo;
+						currentCombo = System.Math.Min(currentCombo, 9999);
+						if (count[4] < currentCombo) count[4] = currentCombo;
 						if (currentCombo % 10 == 0)
 						{
 							if (soulPoint >= 10000) donchan.Play("Jump_G");
 							else donchan.Play("Jump");
+						}
+						if (currentCombo % 100 == 0)
+						{
+							comboObjects[0].SetActive(true);
 						}
 						interact_Control[6].Play("Active");
 						if (offset >= -0.2f && offset <= 0.2f) 
@@ -342,32 +379,52 @@ public class GameplayManager : MonoBehaviour
 						}
 						if (gogoTime) hitScore = (int)(hitScore * 1.1f) - ((int)(hitScore * 1.1f) % 10);
 						score += hitScore;
-						soulPoint = System.Math.Max(soulPoint, 10000);
+						soulPoint = System.Math.Min(soulPoint, 10000);
 					}
-					Destroy(i);
+					Destroy(i.gameObject);
 				}
 				else if (i.tag == "Renda")
 				{
 					count[3]++;
+					currentRenda++;
+					currentRenda = System.Math.Min(currentRenda, 9999);
+					rendaBalloon[0].SetActive(true);
+					rendaBalloon[1].GetComponent<Text>().text = currentRenda.ToString();
 					int rendaScore = 100;
 					if (i.name.Contains("L")) rendaScore *= 2;
 					interact_Control[6].Play("Active");
 					score += rendaScore;
 				}
-				score = System.Math.Max(score, 999999999);
+				score = System.Math.Min(score, 999999999);
 			}
 	}
 	IEnumerator ShowResult()
 	{
-		yield return new WaitForSeconds(2.5f);
+		yield return new WaitForSeconds(1f);
 		GameManager.fading = true;
-		gameManager.fadingScreen.Play("Fading");
+		GameManager.fadingScreen.Play("Fading");
 		yield return new WaitForSeconds(1.5f);
 		GameManager.state = GameManager.GameState.Result;
-
-		gameManager.fadingScreen.Play("FadeOut");
+		resultScreen.SetActive(true);
+		if (soulPoint >= requireSoulPoint[GameManager.currentcourse.difficulty])
+		{
+			resultImage[0].sprite = resultScreenSprite[0];
+			if(!loseFullCombo) resultImage[1].sprite = resultScreenSprite[2];
+			else resultImage[1].sprite = resultScreenSprite[1];
+			float width = 448 + 183 * (soulPoint - requireSoulPoint[GameManager.currentcourse.difficulty]) / (10000 - requireSoulPoint[GameManager.currentcourse.difficulty]);
+			resultSoulGauge.sizeDelta = new Vector2(width, soulGauge.sizeDelta.y);
+		}
+		else
+		{
+			float width = 448 * soulPoint / requireSoulPoint[GameManager.currentcourse.difficulty];
+			resultSoulGauge.sizeDelta = new Vector2(width, soulGauge.sizeDelta.y);
+		}
+		for (int i = 0; i <= 4; i++) resultText[i].text = count[i].ToString();
+		string[] str = new string[4] { "简单", "普通", "困难", "魔王" };
+		resultText[5].text = str[GameManager.currentcourse.difficulty];
+		resultText[6].text = score.ToString();
+		GameManager.fadingScreen.Play("Fadeout");
 		yield return new WaitForSeconds(1);
 		GameManager.fading = false;
-
 	}
 }

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7856623610887850011}
   - component: {fileID: 5909866777550976787}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: '#Special'
   m_TagString: Special
   m_Icon: {fileID: 0}

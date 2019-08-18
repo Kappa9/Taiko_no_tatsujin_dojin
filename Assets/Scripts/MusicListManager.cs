@@ -59,7 +59,7 @@ public class MusicListManager : MonoBehaviour
 			ChangeListPosition();
 			slcMsc = true;
 		}
-		else
+		else if (!showStatement)
 		{
 			if (Input.GetButtonDown("Horizontal") || Input.GetButtonDown("Vertical") || Input.GetButtonDown("KaL1") || Input.GetButtonDown("KaR1"))
 			{
@@ -72,16 +72,26 @@ public class MusicListManager : MonoBehaviour
 			}
 			else if (Input.GetButtonDown("Cancel"))
 			{
-				showStatement = statement.activeInHierarchy;
-				statement.SetActive(!showStatement);
+				stateText.gameObject.SetActive(false);
+				showStatement = true;
+				statement.SetActive(true);	
 			}
 			else if (Input.GetButtonDown("DonL1") || Input.GetButtonDown("DonR1") || Input.GetButtonDown("Start")) 
 			{
-				if (Input.GetButtonDown("Start") && showStatement) Application.Quit();
 				stateText.text = "请选择难度，按下 Esc 键取消";
 				slcDft = true;
 				p1.SetActive(true);
 				p1.GetComponent<RectTransform>().localPosition = new Vector3(-490, -37 + 21.75f * musicList[select].courses.Count, 0);
+			}
+		}
+		else
+		{
+			if (Input.GetButtonDown("Start")) Application.Quit();
+			else if (Input.GetButtonDown("Cancel"))
+			{
+				showStatement = false;
+				statement.SetActive(false);
+				stateText.gameObject.SetActive(true);
 			}
 		}
 	}
@@ -105,7 +115,7 @@ public class MusicListManager : MonoBehaviour
 		}
 		else if (Input.GetButtonDown("DonL1") || Input.GetButtonDown("DonR1") || Input.GetButtonDown("Start"))
 		{
-			LoadMusic(musicList[select], selectDft);
+			LoadMusic(musicList[select], musicList[select].courses[selectDft].difficulty);
 			StartCoroutine(gameManager.LoadScene("GamePlay"));
 		}
 	}
@@ -176,8 +186,8 @@ public class MusicListManager : MonoBehaviour
 
 	void LoadMusic(MusicScore score, int difficulty)
 	{
-		gameManager.songManager.Stop();
-		gameManager.songManager.loop = false;
+		GameManager.songManager.Stop();
+		GameManager.songManager.loop = false;
 		string[] str = GameManager.ReadFile(score.filePath);
 		GameManager.currentSong = new MusicScore();
 		GameManager.currentcourse = new MusicScore.Course();
