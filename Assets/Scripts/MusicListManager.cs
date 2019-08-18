@@ -81,7 +81,7 @@ public class MusicListManager : MonoBehaviour
 				stateText.text = "请选择难度，按下 Esc 键取消";
 				slcDft = true;
 				p1.SetActive(true);
-				p1.GetComponent<RectTransform>().localPosition = new Vector3(-490, 50, 0);
+				p1.GetComponent<RectTransform>().localPosition = new Vector3(-490, -37 + 21.75f * musicList[select].courses.Count, 0);
 			}
 		}
 	}
@@ -94,13 +94,12 @@ public class MusicListManager : MonoBehaviour
 			else if (Input.GetButtonDown("KaL1") || Input.GetAxisRaw("Vertical") > 0 || Input.GetAxisRaw("Horizontal") < 0) selectDft--;
 			if (selectDft >= musicList[select].courses.Count) selectDft = 0;
 			else if (selectDft < 0) selectDft = musicList[select].courses.Count - 1;
-			p1.GetComponent<RectTransform>().localPosition = new Vector3(-490, 50 - 43 * selectDft, 0);
+			p1.GetComponent<RectTransform>().localPosition = new Vector3(-490, -37f + 21.75f * musicList[select].courses.Count - 43 * selectDft, 0);
 		}
 		else if (Input.GetButtonDown("Cancel"))
 		{
 			stateText.text = "按下 Esc 键打开游戏帮助与菜单";
 			slcDft = false;
-			p1.GetComponent<RectTransform>().localPosition = new Vector3(-490, 50, 0);
 			selectDft = 0;
 			p1.SetActive(false);
 		}
@@ -117,14 +116,14 @@ public class MusicListManager : MonoBehaviour
 		{
 			if (j < select)
 			{
-				Selection[j].GetComponent<RectTransform>().localPosition = new Vector3(Selection[j].GetComponent<RectTransform>().localPosition.x, 100 + 55 * (select - j), 0);
+				Selection[j].GetComponent<RectTransform>().localPosition = new Vector3(Selection[j].GetComponent<RectTransform>().localPosition.x, 25 * musicList[select].courses.Count + 55 * (select - j), 0);
 				Selection[j].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 50F);
 				Selection[j].transform.GetChild(1).GetComponent<Text>().text = musicList[j].title + " " + musicList[j].subtitle;
 			}
 			if (j == select)
 			{
 				Selection[j].GetComponent<RectTransform>().localPosition = new Vector3(Selection[j].GetComponent<RectTransform>().localPosition.x, 0, 0);
-				Selection[j].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 250F);
+				Selection[j].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 50 + 50 * musicList[select].courses.Count);
 				Selection[j].transform.GetChild(1).GetComponent<Text>().text = musicList[j].title + " " + musicList[j].subtitle;
 				foreach (MusicScore.Course k in musicList[j].courses)
 				{
@@ -135,7 +134,7 @@ public class MusicListManager : MonoBehaviour
 			}
 			if (j > select)
 			{
-				Selection[j].GetComponent<RectTransform>().localPosition = new Vector3(Selection[j].GetComponent<RectTransform>().localPosition.x, -100 + 55 * (select - j), 0);
+				Selection[j].GetComponent<RectTransform>().localPosition = new Vector3(Selection[j].GetComponent<RectTransform>().localPosition.x, -25 * musicList[select].courses.Count + 55 * (select - j), 0);
 				Selection[j].transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(1050F, 50F);
 				Selection[j].transform.GetChild(1).GetComponent<Text>().text = musicList[j].title + " " + musicList[j].subtitle;
 			}

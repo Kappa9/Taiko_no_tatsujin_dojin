@@ -40,7 +40,6 @@ public class GameManager : MonoBehaviour
 		hitTime = new float[4];
 		SceneManager.sceneLoaded += OnSceneChange;
 		au = GetComponent<AudioSource>();
-		GetMusicList();
 	}
 
 	void Update()
@@ -113,10 +112,7 @@ public class GameManager : MonoBehaviour
 	{
 		UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip("file://" + musicFullPath + name, AudioType.OGGVORBIS);
 		yield return request.SendWebRequest();
-		if (request.isHttpError || request.isNetworkError)
-		{
-			Debug.LogWarning(request.error);
-		}
+		if (request.isHttpError || request.isNetworkError) Debug.LogWarning(request.error);
 		else
 		{
 			AudioClip audio = DownloadHandlerAudioClip.GetContent(request);

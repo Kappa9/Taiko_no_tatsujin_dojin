@@ -4,9 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Note
   - Renda
   - Special
+  - Don
+  - Ka
   layers:
   - Default
   - TransparentFX
